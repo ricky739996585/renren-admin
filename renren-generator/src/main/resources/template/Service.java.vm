@@ -1,0 +1,23 @@
+package ${package}.${moduleName}.service;
+
+import com.baomidou.mybatisplus.service.IService;
+import ${mainPath}.common.utils.PageUtils;
+import ${package}.${moduleName}.entity.${className}Entity;
+
+import java.util.*;
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @email ${email}
+ * @date ${datetime}
+ */
+public interface ${className}Service extends IService<${className}Entity> {
+
+    PageUtils queryPage(#foreach($column in $columns)
+                            #if($column.columnName != $pk.columnName && $column.attrType != 'Date')${column.attrType} ${column.attrname},#end
+                        #end
+        Integer page,Integer limit);
+}
+

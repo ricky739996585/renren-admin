@@ -1,0 +1,40 @@
+package ${package}.${moduleName}.service.impl;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Service;
+import java.util.*;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import ${mainPath}.common.utils.PageUtils;
+
+import ${package}.${moduleName}.dao.${className}Dao;
+import ${package}.${moduleName}.entity.${className}Entity;
+import ${package}.${moduleName}.service.${className}Service;
+
+
+@Service("${classname}Service")
+public class ${className}ServiceImpl extends ServiceImpl<${className}Dao, ${className}Entity> implements ${className}Service {
+
+    @Override
+    public PageUtils queryPage(#foreach($column in $columns)
+                                    #if($column.columnName != $pk.columnName && $column.attrType != 'Date')${column.attrType} ${column.attrname},#end
+                                #end
+        Integer page,Integer limit) {
+        Page<${className}Entity> pageResult = this.selectPage(
+                new Page<>(page,limit),
+                new EntityWrapper<${className}Entity>()
+                    #foreach($column in $columns)
+                        #if($column.columnName != $pk.columnName && $column.attrType != 'Date')
+                            #if($column.attrType == "String")
+                                .eq(StringUtils.isNotBlank(${column.attrname}),"${column.columnName}",${column.attrname})
+                            #else
+                                .eq(null != ${column.attrname},"${column.columnName}",${column.attrname})
+                            #end
+                        #end
+                    #end
+        );
+        return new PageUtils(pageResult);
+    }
+
+}
